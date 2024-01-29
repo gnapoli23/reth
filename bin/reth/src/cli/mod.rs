@@ -7,7 +7,8 @@ use crate::{
     },
     cli::ext::RethCliExt,
     commands::{
-        config_cmd, db, debug_cmd, import, init_cmd, node, p2p, recover, stage, test_vectors,
+        config_cmd, db, debug_cmd, dumpgenesis, import, init_cmd, node, p2p, recover, stage,
+        test_vectors,
     },
     runner::CliRunner,
     version::{LONG_VERSION, SHORT_VERSION},
@@ -88,6 +89,7 @@ impl<Ext: RethCliExt> Cli<Ext> {
             Commands::Config(command) => runner.run_until_ctrl_c(command.execute()),
             Commands::Debug(command) => runner.run_command_until_exit(|ctx| command.execute(ctx)),
             Commands::Recover(command) => runner.run_command_until_exit(|ctx| command.execute(ctx)),
+            Commands::Dumpgenesis(command) => runner.run_until_ctrl_c(command.execute()),
         }
     }
 
@@ -149,6 +151,9 @@ pub enum Commands<Ext: RethCliExt = ()> {
     /// Scripts for node recovery
     #[command(name = "recover")]
     Recover(recover::Command),
+    /// Dumps genesis block JSON configuration to stdout
+    #[command(name = "dumpgenesis")]
+    Dumpgenesis(dumpgenesis::Command),
 }
 
 impl<Ext: RethCliExt> Commands<Ext> {
